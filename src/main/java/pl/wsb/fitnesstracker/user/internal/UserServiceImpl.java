@@ -19,20 +19,41 @@ class UserServiceImpl implements UserService, UserProvider {
 
     @Override
     public User createUser(final User user) {
-        log.info("Creating User {}", user);
         if (user.getId() != null) {
-            throw new IllegalArgumentException("User has already DB ID, update is not permitted!");
+            throw new IllegalArgumentException("User already has ID");
         }
         return userRepository.save(user);
     }
 
     @Override
-    public Optional<User> getUser(final Long userId) {
+    public User updateUser(Long id, User updatedUser) {
+
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id " + id));
+
+        User userToSave = new User(
+                id,
+                updatedUser.getFirstName(),
+                updatedUser.getLastName(),
+                updatedUser.getBirthdate(),
+                updatedUser.getEmail()
+        );
+
+        return userRepository.save(userToSave);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> getUser(Long userId) {
         return userRepository.findById(userId);
     }
 
     @Override
-    public Optional<User> getUserByEmail(final String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -40,5 +61,4 @@ class UserServiceImpl implements UserService, UserProvider {
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
-
 }

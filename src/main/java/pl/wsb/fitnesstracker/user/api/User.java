@@ -33,15 +33,31 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    // Konstruktor do tworzenia NOWEGO użytkownika
     public User(
             final String firstName,
             final String lastName,
             final LocalDate birthdate,
             final String email) {
 
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthdate = birthdate;
         this.email = email;
     }
 
-}
+    // Konstruktor potrzebny do UPDATE (immutable user)
+    public User(
+            final Long id,
+            final String firstName,
+            final String lastName,
+            final LocalDate birthdate,
+            final String email) {
 
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.email = email;
+    }
+}
